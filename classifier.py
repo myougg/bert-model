@@ -29,7 +29,7 @@ model = tf.keras.Sequential([
     tf.keras.layers.Lambda(lambda x: x[:, 0, :]),
     tf.keras.layers.Dense(2, activation='softmax')
 ])
-model.compile(loss='mse')
+model.compile(loss='categorical_crossentropy')
 model.fit(tx, ty, epochs=10, batch_size=2)
 logits = model.predict(tx)
 pred = logits.argmax(-1).tolist()
