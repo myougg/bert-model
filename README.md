@@ -9,10 +9,20 @@ import tensorflow as tf
 import tensorflow_hub as hub
 
 
-tokenizer = hub.KerasLayer('https://code.aliyun.com/qhduan/bert-model/raw/bert_simple/bert_simple_tokenizer.tar.gz')
-model = hub.KerasLayer('https://code.aliyun.com/qhduan/bert-model/raw/bert_simple/bert_chinese_L-12_H-768_A-12.tar.gz')
+# 官方模型
+tokenizer = hub.KerasLayer('https://code.aliyun.com/qhduan/bert/raw/bert_simple/bert_simple_tokenizer.tar.gz')
+model = hub.KerasLayer('https://code.aliyun.com/qhduan/bert/raw/master/bert_chinese_L-12_H-768_A-12.tar.gz')
 
-x = tf.ragged.constant([list('我爱你')]).to_tensor('[PAD]')
+x = tf.constant([['我爱你']])
 ids = tokenizer(x)
 y = model(ids)
 ```
+
+其他模型：
+
+来自[ymcui](https://github.com/ymcui/Chinese-BERT-wwm)
+
+`https://code.aliyun.com/qhduan/bert/raw/master/bert_chinese_wwm_ext_L-12_H-768_A-12.tar.gz`
+
+`https://code.aliyun.com/qhduan/bert/raw/master/bert_chinese_roberta_wwm_ext_L-12_H-768_A-12.tar.gz`
+
