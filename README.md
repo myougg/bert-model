@@ -10,7 +10,7 @@ import tensorflow_hub as hub
 
 
 # 官方模型
-tokenizer = hub.KerasLayer('https://code.aliyun.com/qhduan/bert/raw/bert_simple/bert_simple_tokenizer.tar.gz')
+tokenizer = hub.KerasLayer('https://code.aliyun.com/qhduan/bert/raw/master/bert_simple_tokenizer.tar.gz')
 model = hub.KerasLayer('https://code.aliyun.com/qhduan/bert/raw/master/bert_chinese_L-12_H-768_A-12.tar.gz')
 
 x = tf.constant([['我爱你']])
