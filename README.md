@@ -6,11 +6,20 @@
 
 本项目重点在于，实际上我们是可以通过非常非常简单的几行代码，就能实现一个几乎达到SOTA的模型的。
 
-## BERT分类模型
+## BERT分类模型（pool模式）
 
-返回一个1x768的镜像
+返回一个1x768的镜像，相当于句子的固定长度Embedding
 
 根据一个实际Chinese GLUE的测试样例：[COLAB DEMO](https://colab.research.google.com/drive/1KkjPVn1s6_tSznhox5RxuKF9Igm8VAbE)
+
+```python
+import tensorflow_hub as hub
+
+model = hub.KerasLayer('https://code.aliyun.com/qhduan/chinese_roberta_wwm_ext_L-12_H-768_A-12/raw/master/pool.tar.gz')
+
+# y.shape == (1, 768)
+y = model([['我爱你']])
+```
 
 一个非常简单的样例（`classifier.py`）：
 
@@ -36,8 +45,7 @@ tx = tf.constant(x)
 ty = tf.constant(tf.keras.utils.to_categorical(y, 2))
 
 model = tf.keras.Sequential([
-  hub.KerasLayer('https://code.aliyun.com/qhduan/bert-pool/raw/master/bert_simple_tokenizer.tar.gz', trainable=False),
-  hub.KerasLayer('https://code.aliyun.com/qhduan/bert-pool/raw/master/bert_pool_chinese_roberta_wwm_ext_L-12_H-768_A-12.tar.gz', trainable=False),
+  hub.KerasLayer('https://code.aliyun.com/qhduan/chinese_roberta_wwm_ext_L-12_H-768_A-12/raw/master/pool.tar.gz', trainable=False),
   tf.keras.layers.Dense(2, activation='softmax')
 ])
 
@@ -50,29 +58,33 @@ print(pred)
 print(y)
 ```
 
-## BERT序列模型
+## BERT序列模型（SEQ）
 
-返回一个序列的Embedding的模型，类似Bert-as-A-Service
+返回一个序列的Embedding的模型
 
 ```python
-import tensorflow as tf
 import tensorflow_hub as hub
 
+model = hub.KerasLayer('https://code.aliyun.com/qhduan/chinese_roberta_wwm_ext_L-12_H-768_A-12/raw/master/seq.tar.gz')
 
-# 官方模型
-tokenizer = hub.KerasLayer('https://code.aliyun.com/qhduan/bert/raw/master/bert_simple_tokenizer.tar.gz')
-model = hub.KerasLayer('https://code.aliyun.com/qhduan/bert/raw/master/bert_chinese_L-12_H-768_A-12.tar.gz')
-
-x = tf.constant([['我爱你']])
-ids = tokenizer(x)
-y = model(ids)
+# y.shape == (1, 5, 768)
+y = model([['我爱你']])
 ```
 
-其他模型：
+## BERT预测模型（PRED）
 
-来自[ymcui](https://github.com/ymcui/Chinese-BERT-wwm)
+例如使用mask预测缺字
 
-`https://code.aliyun.com/qhduan/bert/raw/master/bert_chinese_wwm_ext_L-12_H-768_A-12.tar.gz`
+```python
+import tensorflow_hub as hub
 
-`https://code.aliyun.com/qhduan/bert/raw/master/bert_chinese_roberta_wwm_ext_L-12_H-768_A-12.tar.gz`
+model = hub.KerasLayer('https://code.aliyun.com/qhduan/chinese_roberta_wwm_ext_L-12_H-768_A-12/raw/master/pred.tar.gz')
 
+# y.shape == (1, 5, 21128)
+y = model([['我[MASK]你']])
+```
+
+
+## 模型引用
+
+Roberta和WMM来自[ymcui](https://github.com/ymcui/Chinese-BERT-wwm)

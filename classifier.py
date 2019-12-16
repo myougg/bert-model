@@ -20,8 +20,7 @@ tx = tf.constant(x)
 ty = tf.constant(tf.keras.utils.to_categorical(y, 2))
 
 model = tf.keras.Sequential([
-  hub.KerasLayer('https://code.aliyun.com/qhduan/bert-pool/raw/master/bert_simple_tokenizer.tar.gz', trainable=False),
-  hub.KerasLayer('https://code.aliyun.com/qhduan/bert-pool/raw/master/bert_pool_chinese_roberta_wwm_ext_L-12_H-768_A-12.tar.gz', trainable=False),
+  hub.KerasLayer('https://code.aliyun.com/qhduan/chinese_roberta_wwm_ext_L-12_H-768_A-12/raw/master/pool.tar.gz', trainable=False),
   tf.keras.layers.Dense(2, activation='softmax')
 ])
 model.compile(loss='categorical_crossentropy')
