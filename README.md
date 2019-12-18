@@ -15,6 +15,7 @@
 ```python
 import tensorflow_hub as hub
 
+# 注意这里最后是 pool.tar.gz
 model = hub.KerasLayer('https://code.aliyun.com/qhduan/chinese_roberta_wwm_ext_L-12_H-768_A-12/raw/master/pool.tar.gz')
 
 # y.shape == (1, 768)
@@ -44,6 +45,7 @@ y = [
 tx = tf.constant(x)
 ty = tf.constant(tf.keras.utils.to_categorical(y, 2))
 
+# 注意这里最后是 pool.tar.gz
 model = tf.keras.Sequential([
   hub.KerasLayer('https://code.aliyun.com/qhduan/chinese_roberta_wwm_ext_L-12_H-768_A-12/raw/master/pool.tar.gz', trainable=False),
   tf.keras.layers.Dense(2, activation='softmax')
@@ -65,9 +67,11 @@ print(y)
 ```python
 import tensorflow_hub as hub
 
+# 注意这里最后是 seq.tar.gz
 model = hub.KerasLayer('https://code.aliyun.com/qhduan/chinese_roberta_wwm_ext_L-12_H-768_A-12/raw/master/seq.tar.gz')
 
 # y.shape == (1, 5, 768)
+# [CLS], 我, 爱, 你, [SEP]，所以一共5个符号
 y = model([['我爱你']])
 ```
 
@@ -78,10 +82,16 @@ y = model([['我爱你']])
 ```python
 import tensorflow_hub as hub
 
+# 注意这里最后是 pred.tar.gz
 model = hub.KerasLayer('https://code.aliyun.com/qhduan/chinese_roberta_wwm_ext_L-12_H-768_A-12/raw/master/pred.tar.gz')
 
 # y.shape == (1, 5, 21128)
 y = model([['我[MASK]你']])
+
+index2word = {k: v.strip() for k, v in enumerate(open('vocab.txt'))}
+
+# 我 爱 你
+r = [index2word[i] for i in y.numpy().argmax(-1).flatten()][1:-1]
 ```
 
 
