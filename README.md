@@ -1,5 +1,7 @@
 # BERT Models
 
+注达到本文效果基本要求Tensorflow 2.0
+
 也许，是最简单的BERT预加载模型。
 
 当然，实现起来是有一些tricky的，而且tokenizer并不是真正的bert的tokenizer，中文大部分不会有太大问题，英文的话实际上因为考虑BPE，所以肯定是不行的。
